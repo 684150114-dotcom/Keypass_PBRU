@@ -121,10 +121,16 @@ section{padding:90px 0;position:relative;}
 .browser-bar{background:#11162C;padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);}
 .browser-dots{display:flex;gap:6px;}
 .browser-dots span{width:9px;height:9px;border-radius:50%;background:#3A426B;}
-.urlbox{flex:1;background:#0E1223;border-radius:8px;padding:7px 12px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-dim);display:flex;align-items:center;gap:8px;overflow:hidden;white-space:nowrap;}
+.urlbox{flex:1;background:#0E1223;border-radius:8px;padding:7px 12px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-dim);display:flex;align-items:center;flex-wrap:wrap;gap:1px;row-gap:2px;}
 .urlbox.bad{color:#F2A392;}
-.urlbox .lock{flex-shrink:0;}
+.urlbox .lock{flex-shrink:0;margin-right:6px;}
+.url-good{color:var(--text-dim);}
+.url-bad{color:#FF8A72;font-weight:700;text-decoration:underline;text-decoration-color:#FF8A72;text-decoration-thickness:2px;text-underline-offset:3px;}
+.domain-hint{background:rgba(229,96,75,.08);border-bottom:1px solid rgba(229,96,75,.25);padding:11px 16px;font-size:12.5px;color:#F2B8AC;line-height:1.65;text-align:left;}
+.domain-hint b{color:#fff;}
 .browser-body{padding:40px 30px;text-align:center;background:linear-gradient(180deg,#171D38,#12162C);}
+.sim-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+.sim-step-label{margin-top:12px;color:var(--text-dimmer);font-size:12px;}
 .fakebank-logo{font-size:26px;font-weight:700;font-family:'Kanit',sans-serif;color:var(--text);margin-bottom:6px;}
 .fakebank-sub{color:var(--text-dimmer);font-size:12.5px;margin-bottom:26px;}
 .fake-field{background:#0E1223;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:0 auto 12px;max-width:320px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:13.5px;color:var(--text-dim);min-height:20px;}
@@ -293,8 +299,11 @@ footer .keyglyph{font-size:22px;margin-bottom:14px;opacity:.6;}
     <div class="browser-mock reveal" id="phishBox">
       <div class="browser-bar">
         <div class="browser-dots"><span></span><span></span><span></span></div>
-        <div class="urlbox bad" id="urlbox"><span class="lock">🔓</span><span id="urlText">http://siamtrust-bank-888.com/login</span></div>
+        <div class="urlbox bad" id="urlbox">
+          <span class="lock">🔓</span><span class="url-good">http://siamtrust-bank</span><span class="url-bad">-secure-login.info</span><span class="url-good">/login</span>
+        </div>
       </div>
+      <div class="domain-hint">🔍 <b>จุดสังเกต:</b> เว็บ SiamTrust Bank ตัวจริงมีโดเมนเดียวคือ <b class="mono">siamtrust-bank.com</b> เท่านั้น ส่วนที่ขีดเส้นสีแดงด้านบนคือคำที่ถูกต่อเติมเข้ามาเพื่อหลอกให้เข้าใจผิด</div>
       <div class="browser-body">
         <div class="fakebank-logo">🏦 SiamTrust Bank</div>
         <div class="fakebank-sub">เข้าสู่ระบบเพื่อจัดการบัญชีของคุณ</div>
@@ -303,7 +312,13 @@ footer .keyglyph{font-size:22px;margin-bottom:14px;opacity:.6;}
           <div class="fake-field">รหัสผ่าน: <span id="typedPass"></span><span class="caret" id="caret2" style="display:none;"></span></div>
         </div>
         <div id="phishFieldsPk" style="display:none;color:var(--text-dim);font-size:13.5px;margin-bottom:14px;">ระบบจะขอให้อุปกรณ์ของคุณยืนยันตัวตนด้วย Passkey ที่ผูกไว้กับเว็บไซต์จริงเท่านั้น</div>
-        <button class="btn btn-gold sim-btn" id="simBtn">เข้าสู่ระบบ</button>
+
+        <div class="sim-controls">
+          <button class="btn btn-ghost" id="simBackBtn" disabled>◀ ย้อนกลับ</button>
+          <button class="btn btn-gold" id="simBtn">▶ เริ่มจำลอง</button>
+          <button class="btn btn-ghost" id="simResetBtn">🔄 เริ่มใหม่</button>
+        </div>
+        <div class="sim-step-label mono" id="simStepLabel">ขั้นตอนที่ 0</div>
         <div class="sim-result" id="simResult"></div>
       </div>
     </div>
@@ -519,74 +534,116 @@ compareData.forEach(c=>{
   compareGrid.appendChild(card);
 });
 
-/* ================= PHISHING SIMULATOR ================= */
+/* ================= PHISHING SIMULATOR (step engine: back / next / reset) ================= */
 const tabs = document.querySelectorAll('#phish .tab');
-const urlText = document.getElementById('urlText');
-const urlbox = document.getElementById('urlbox');
 const phishFieldsPw = document.getElementById('phishFieldsPw');
 const phishFieldsPk = document.getElementById('phishFieldsPk');
 const simBtn = document.getElementById('simBtn');
+const simBackBtn = document.getElementById('simBackBtn');
+const simResetBtn = document.getElementById('simResetBtn');
+const simStepLabel = document.getElementById('simStepLabel');
 const simResult = document.getElementById('simResult');
 const typedUser = document.getElementById('typedUser');
 const typedPass = document.getElementById('typedPass');
 const caret1 = document.getElementById('caret1');
 const caret2 = document.getElementById('caret2');
+
 let phishMode = 'pw';
+let phishStep = 0;
+const PW_MAX_STEP = 3;
+const PK_MAX_STEP = 2;
+
+const PW_ATTACKER_LOG = `<div class="attacker-log mono">$ attacker@server:~ captured credentials<br>&gt; user: somchai_user<br>&gt; pass: ******** (ใช้งานได้จริงกับเว็บธนาคารจริงด้วย หากใช้รหัสซ้ำ)</div>`;
 
 tabs.forEach(t=>t.addEventListener('click',()=>{
   tabs.forEach(x=>x.classList.remove('active'));
   t.classList.add('active');
   phishMode = t.dataset.tab;
-  resetPhish();
+  phishStep = 0;
+  renderPhish();
 }));
 
-function resetPhish(){
-  simResult.className='sim-result'; simResult.innerHTML='';
-  typedUser.textContent=''; typedPass.textContent='';
-  caret1.style.display='inline-block'; caret2.style.display='none';
-  simBtn.disabled=false; simBtn.textContent='เข้าสู่ระบบ';
+simBtn.addEventListener('click', ()=>{
+  const max = phishMode==='pw' ? PW_MAX_STEP : PK_MAX_STEP;
+  if(phishStep < max){ phishStep++; renderPhish(); }
+});
+simBackBtn.addEventListener('click', ()=>{
+  if(phishStep > 0){ phishStep--; renderPhish(); }
+});
+simResetBtn.addEventListener('click', ()=>{
+  phishStep = 0; renderPhish();
+});
+
+function renderPhish(){
   if(phishMode==='pw'){
     phishFieldsPw.style.display='block'; phishFieldsPk.style.display='none';
+    renderPwStep();
   }else{
     phishFieldsPw.style.display='none'; phishFieldsPk.style.display='block';
+    renderPkStep();
   }
-}
-resetPhish();
-
-function typeInto(el, text, done){
-  let i=0;
-  const iv = setInterval(()=>{
-    el.textContent += text[i]; i++;
-    if(i>=text.length){ clearInterval(iv); if(done) done(); }
-  }, 70);
+  simBackBtn.disabled = (phishStep===0);
 }
 
-simBtn.addEventListener('click', ()=>{
-  simBtn.disabled = true;
-  if(phishMode==='pw'){
-    simBtn.textContent = 'กำลังเข้าสู่ระบบ…';
-    typeInto(typedUser, 'somchai_user', ()=>{
-      caret1.style.display='none'; caret2.style.display='inline-block';
-      typeInto(typedPass, '••••••••', ()=>{
-        caret2.style.display='none';
-        setTimeout(()=>{
-          simResult.className='sim-result bad show';
-          simResult.innerHTML = `<div class="rtitle">⚠️ ข้อมูลของคุณถูกส่งไปยังผู้โจมตีแล้ว</div>
-            เว็บนี้ไม่ใช่ SiamTrust Bank จริง แต่มีหน้าตาเหมือนทุกอย่าง เพราะรหัสผ่านเป็นเพียง "ข้อความ" จึงถูกดักจับและนำไปใช้ซ้ำได้ทันที
-            <div class="attacker-log mono">$ attacker@server:~ captured credentials<br>&gt; user: somchai_user<br>&gt; pass: ******** (ใช้งานได้จริงกับเว็บธนาคารจริงด้วย หากใช้รหัสซ้ำ)</div>`;
-        },400);
-      });
-    });
-  }else{
-    simBtn.textContent = 'กำลังตรวจสอบ…';
-    setTimeout(()=>{
-      simResult.className='sim-result good show';
-      simResult.innerHTML = `<div class="rtitle">✅ Passkey ปฏิเสธการยืนยันตัวตนอัตโนมัติ</div>
-        เบราว์เซอร์ตรวจพบว่าโดเมนนี้ (siamtrust-bank-secure.com) ไม่ตรงกับโดเมนที่ลงทะเบียน Passkey ไว้ (siamtrust-bank.com) จึงไม่มีการเซ็นรับรองใด ๆ เกิดขึ้น บัญชีของคุณปลอดภัย 100%`;
-      simBtn.textContent = 'ปลอดภัยแล้ว';
-    },900);
+function renderPwStep(){
+  simResult.className='sim-result'; simResult.innerHTML='';
+  caret1.style.display='none'; caret2.style.display='none';
+  if(phishStep===0){
+    typedUser.textContent=''; typedPass.textContent='';
+    caret1.style.display='inline-block';
+    simStepLabel.textContent = 'ขั้นตอนที่ 0 / 3 — ยังไม่เริ่มกรอกข้อมูล';
+    simBtn.textContent = '▶ เริ่มจำลอง: กรอกชื่อผู้ใช้';
+    simBtn.disabled = false;
+  }else if(phishStep===1){
+    typedUser.textContent='somchai_user'; typedPass.textContent='';
+    caret2.style.display='inline-block';
+    simStepLabel.textContent = 'ขั้นตอนที่ 1 / 3 — กรอกชื่อผู้ใช้แล้ว';
+    simBtn.textContent = '▶ พิมพ์รหัสผ่านต่อ';
+    simBtn.disabled = false;
+  }else if(phishStep===2){
+    typedUser.textContent='somchai_user'; typedPass.textContent='••••••••';
+    simStepLabel.textContent = 'ขั้นตอนที่ 2 / 3 — กรอกรหัสผ่านครบแล้ว';
+    simBtn.textContent = '▶ กดเข้าสู่ระบบ';
+    simBtn.disabled = false;
+  }else if(phishStep===3){
+    typedUser.textContent='somchai_user'; typedPass.textContent='••••••••';
+    simStepLabel.textContent = 'ขั้นตอนที่ 3 / 3 — ผลลัพธ์';
+    simBtn.textContent = 'จบขั้นตอนแล้ว';
+    simBtn.disabled = true;
+    simResult.className='sim-result bad show';
+    simResult.innerHTML = `<div class="rtitle">⚠️ ข้อมูลของคุณถูกส่งไปยังผู้โจมตีแล้ว</div>
+      เว็บนี้ไม่ใช่ SiamTrust Bank จริง แต่มีหน้าตาเหมือนทุกอย่าง เพราะรหัสผ่านเป็นเพียง "ข้อความ" จึงถูกดักจับและนำไปใช้ซ้ำได้ทันที กด ◀ ย้อนกลับ เพื่อไล่ดูทีละขั้นตอนอีกครั้ง
+      ${PW_ATTACKER_LOG}`;
   }
-});
+}
+
+function renderPkStep(){
+  simResult.className='sim-result'; simResult.innerHTML='';
+  if(phishStep===0){
+    simStepLabel.textContent = 'ขั้นตอนที่ 0 / 2 — ยังไม่เริ่ม';
+    simBtn.textContent = '▶ เข้าสู่ระบบด้วย Passkey';
+    simBtn.disabled = false;
+  }else if(phishStep===1){
+    simStepLabel.textContent = 'ขั้นตอนที่ 1 / 2 — กำลังตรวจสอบโดเมน';
+    simBtn.textContent = '▶ ดูผลการตรวจสอบ';
+    simBtn.disabled = false;
+    simResult.className='sim-result show';
+    simResult.style.background='rgba(203,161,53,.1)';
+    simResult.style.border='1px solid rgba(203,161,53,.3)';
+    simResult.style.color='var(--text-dim)';
+    simResult.innerHTML = `<div class="rtitle">🔍 กำลังเทียบโดเมนของเว็บนี้กับโดเมนที่ลงทะเบียน Passkey ไว้…</div>`;
+  }else if(phishStep===2){
+    simStepLabel.textContent = 'ขั้นตอนที่ 2 / 2 — ผลลัพธ์';
+    simBtn.textContent = 'จบขั้นตอนแล้ว';
+    simBtn.disabled = true;
+    simResult.className='sim-result good show';
+    simResult.removeAttribute('style');
+    simResult.innerHTML = `<div class="rtitle">✅ Passkey ปฏิเสธการยืนยันตัวตนอัตโนมัติ</div>
+      เบราว์เซอร์ตรวจพบว่าโดเมนนี้ (siamtrust-bank-secure-login.info) ไม่ตรงกับโดเมนที่ลงทะเบียน Passkey ไว้ (siamtrust-bank.com) จึงไม่มีการเซ็นรับรองใด ๆ เกิดขึ้น บัญชีของคุณปลอดภัย 100% กด ◀ ย้อนกลับ เพื่อไล่ดูทีละขั้นตอนอีกครั้ง`;
+  }
+}
+
+renderPhish();
 
 /* ================= REAL WEBAUTHN DEMO ================= */
 const supportPill = document.getElementById('supportPill');
