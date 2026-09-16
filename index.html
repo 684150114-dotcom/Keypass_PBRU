@@ -32,17 +32,48 @@ button{font-family:inherit;}
 /* ---- panels (SPA tabs) ---- */
 .panel{display:none;}
 .panel.active{display:block;}
-.content-panel{padding:90px 0 140px;}
+.content-panel{padding:84px 0 70px;}
 
-/* ---- nav dock ---- */
-.navdock{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:200;display:flex;gap:6px;background:rgba(23,29,56,.94);border:1px solid var(--line);border-radius:100px;padding:7px;backdrop-filter:blur(10px);box-shadow:0 12px 40px rgba(0,0,0,.4);max-width:94vw;overflow-x:auto;}
-.navdock button{flex:0 0 auto;background:none;border:none;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:0.72rem;padding:9px 13px;border-radius:100px;white-space:nowrap;cursor:pointer;transition:all .15s;}
-.navdock button:hover{color:var(--text);}
-.navdock button.active{background:var(--bg-panel-2);color:var(--gold);}
+/* ---- hamburger + sidebar nav ---- */
+.hamburger-btn{position:fixed;top:16px;left:16px;z-index:260;width:44px;height:44px;border-radius:12px;background:rgba(23,29,56,.92);border:1px solid var(--line);backdrop-filter:blur(10px);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.hamburger-btn span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:all .25s;}
+.hamburger-btn.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.hamburger-btn.open span:nth-child(2){opacity:0;}
+.hamburger-btn.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+.sidebar-overlay{position:fixed;inset:0;background:rgba(5,7,16,.6);z-index:290;opacity:0;pointer-events:none;transition:opacity .25s;}
+.sidebar-overlay.open{opacity:1;pointer-events:auto;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:78vw;max-width:280px;background:var(--bg-panel);border-right:1px solid var(--line);z-index:300;transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:20px 14px;box-shadow:20px 0 50px rgba(0,0,0,.3);}
+.sidebar.open{transform:translateX(0);}
+.sidebar-head{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dimmer);letter-spacing:.1em;text-transform:uppercase;padding:10px 12px 16px;}
+.sidebar button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;color:var(--text-dim);font-family:'Kanit',sans-serif;font-size:0.92rem;padding:13px 12px;border-radius:10px;cursor:pointer;transition:all .15s;}
+.sidebar button:hover{background:var(--bg-panel-2);color:var(--text);}
+.sidebar button.active{background:var(--bg-panel-2);color:var(--gold);}
+.sidebar button .si{font-size:1.1rem;}
 
 /* ---- hero (main page) ---- */
-.hero{min-height:92svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:70px 24px 60px;}
+.hero{min-height:92svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:70px 24px 60px;overflow:hidden;}
 .hero-canvas{position:absolute;inset:0;z-index:0;opacity:.5;}
+.hero-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(203,161,53,.07) 1px, transparent 1px),linear-gradient(90deg, rgba(203,161,53,.07) 1px, transparent 1px);background-size:42px 42px;-webkit-mask-image:radial-gradient(ellipse 70% 55% at 50% 38%, black, transparent);mask-image:radial-gradient(ellipse 70% 55% at 50% 38%, black, transparent);}
+.hero-scan{position:absolute;inset:0;z-index:0;background:repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 3px);pointer-events:none;opacity:.6;}
+.hero-orb{position:relative;width:96px;height:96px;margin:0 auto 16px;z-index:1;}
+.hero-orb .ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:var(--gold);border-right-color:var(--cyan);animation:orbSpin 3.2s linear infinite;}
+.hero-orb .ring2{position:absolute;inset:13px;border-radius:50%;border:1px solid var(--line);}
+.hero-orb .key{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;filter:drop-shadow(0 0 12px rgba(203,161,53,.55));}
+.hero-orb .pulse{position:absolute;inset:0;border-radius:50%;border:1px solid var(--cyan);opacity:0;animation:orbPulse 2.4s ease-out infinite;}
+@keyframes orbSpin{to{transform:rotate(360deg);}}
+@keyframes orbPulse{0%{transform:scale(.75);opacity:.7;}100%{transform:scale(1.9);opacity:0;}}
+.hero h1{filter:drop-shadow(0 0 16px rgba(203,161,53,.32)) drop-shadow(0 0 30px rgba(79,209,197,.14));}
+.def-pill{z-index:1;display:inline-flex;align-items:center;gap:8px;background:rgba(203,161,53,.08);border:1px solid rgba(203,161,53,.3);padding:9px 18px;border-radius:100px;font-size:0.82rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim);margin-bottom:20px;}
+.def-pill b{color:var(--gold);}
+.hero-fx{animation:heroIn .7s ease both;}
+.hero-fx:nth-child(1){animation-delay:.05s;}
+.hero-fx:nth-child(2){animation-delay:.12s;}
+.hero-fx:nth-child(3){animation-delay:.2s;}
+.hero-fx:nth-child(4){animation-delay:.28s;}
+.hero-fx:nth-child(5){animation-delay:.36s;}
+.hero-fx:nth-child(6){animation-delay:.44s;}
+@keyframes heroIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@media(prefers-reduced-motion:reduce){.hero-fx{animation:none;}}
 .eyebrow{font-family:'JetBrains Mono',monospace;letter-spacing:.2em;text-transform:uppercase;font-size:0.72rem;color:var(--gold);margin-bottom:18px;z-index:1;display:flex;align-items:center;gap:10px;}
 .eyebrow::before,.eyebrow::after{content:"";width:26px;height:1px;background:var(--gold-dim);}
 .hero h1{font-size:clamp(2.6rem,9vw,5.8rem);line-height:.95;font-weight:700;margin:0 0 10px;z-index:1;background:linear-gradient(180deg,#fff,#cdd3ea 60%,var(--gold-dim));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.02em;}
@@ -94,11 +125,23 @@ button{font-family:inherit;}
 .persona-head .pic{font-size:1.7rem;}
 .persona-head h3{margin:0;font-size:1.05rem;}
 .persona-head span{color:var(--text-dim);font-size:0.78rem;}
-.day-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
-@media(max-width:700px){.day-row{grid-template-columns:1fr;}}
-.moment{background:var(--bg-panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;gap:12px;align-items:flex-start;}
+.day-timeline{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+.group-divider{display:none;}
+@media(max-width:700px){
+  .day-timeline{grid-template-columns:1fr;gap:10px;}
+  .moment.pw{order:var(--slot);}
+  .moment.pk{order:calc(var(--slot) + 10);}
+  .group-divider{display:block;order:0;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dimmer);letter-spacing:.08em;padding:14px 4px 4px;}
+  .group-divider.pk-divider{order:9;padding-top:20px;border-top:1px solid var(--line);margin-top:6px;}
+}
+.moment{background:var(--bg-panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;}
 .moment .m-icon{font-size:1.3rem;flex-shrink:0;}
 .moment .m-time{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text-dimmer);margin-bottom:4px;}
+.m-tag{display:block;width:fit-content;font-family:'JetBrains Mono',monospace;font-size:0.6rem;padding:3px 9px;border-radius:100px;margin-bottom:6px;}
+.m-tag.pw{background:rgba(229,96,75,.12);color:#F2A392;}
+.m-tag.pk{background:rgba(79,209,197,.12);color:var(--cyan);}
+.moment .m-detail{max-height:0;overflow:hidden;transition:max-height .3s ease;font-size:0.8rem;color:var(--text-dimmer);line-height:1.6;}
+.moment.open .m-detail{max-height:200px;margin-top:8px;}
 .moment .m-text{font-size:0.88rem;color:var(--text-dim);line-height:1.55;font-weight:600;}
 .moment.risk.pw{border-color:var(--red);background:linear-gradient(135deg,rgba(229,96,75,.14),var(--bg-panel));}
 .moment.risk.pw .m-text{color:#F2B8AC;}
@@ -215,6 +258,11 @@ button{font-family:inherit;}
 
 /* ---- quiz ---- */
 .quiz-box{background:var(--bg-panel);border:1px solid var(--line);border-radius:18px;padding:30px;}
+.qr-box{background:var(--bg-panel);border:1px solid var(--line);border-radius:18px;padding:40px 30px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.qr-placeholder{width:200px;height:200px;max-width:60vw;max-height:60vw;border:2px dashed var(--gold-dim);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-size:2.4rem;color:var(--text-dimmer);}
+.qr-placeholder span{font-size:0.75rem;font-family:'JetBrains Mono',monospace;}
+.qr-img{width:200px;height:200px;max-width:60vw;max-height:60vw;border-radius:16px;background:#fff;padding:10px;}
+.qr-note{color:var(--text-dim);font-size:0.85rem;line-height:1.6;margin:0;}
 .quiz-progress{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dimmer);margin-bottom:14px;}
 .quiz-q{font-size:1.05rem;font-weight:600;margin-bottom:18px;}
 .quiz-opt{display:block;width:100%;text-align:left;background:var(--bg-panel-2);border:1px solid var(--line);color:var(--text);padding:13px 16px;border-radius:12px;margin-bottom:9px;cursor:pointer;font-size:0.88rem;transition:all .15s;}
@@ -252,24 +300,23 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
 <section class="panel active" id="panel-main">
   <div class="hero">
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
-    <div class="eyebrow">เว็บไซต์ความรู้ด้านความปลอดภัยดิจิทัล</div>
-    <h1>Passkey</h1>
-    <div class="threat-line mono">⚠️ ปลอดภัยจาก <span id="threatWord" class="strike">การถูกแฮก</span></div>
-    <div class="stat-cards">
+    <div class="hero-grid"></div>
+    <div class="hero-scan"></div>
+    <div class="eyebrow hero-fx">ระบบยืนยันตัวตนยุคใหม่</div>
+    <div class="hero-orb hero-fx"><div class="ring"></div><div class="ring2"></div><div class="pulse"></div><div class="key">🔑</div></div>
+    <h1 class="hero-fx">Passkey</h1>
+    <div class="def-pill hero-fx">🔓 <span>คือ <b>กุญแจดิจิทัล</b> ที่มาแทนรหัสผ่านทั้งหมด</span></div>
+    <div class="threat-line mono hero-fx">⚠️ ปลอดภัยจาก <span id="threatWord" class="strike">การถูกแฮก</span></div>
+    <div class="stat-cards hero-fx">
       <div class="stat-card"><div class="sc-num">0</div><div class="sc-label">รหัสผ่านที่ต้องจำ</div></div>
       <div class="stat-card cyan"><div class="sc-num">100%</div><div class="sc-label">กัน Phishing ได้</div></div>
       <div class="stat-card"><div class="sc-num">1 แตะ</div><div class="sc-label">เข้าระบบทันที</div></div>
     </div>
-    <div class="hero-hint">เลือกหัวข้อด้านล่าง หรือแตะเมนูลอยล่างสุด</div>
+    <div class="hero-hint hero-fx">เลือกหัวข้อด้านล่าง 👇</div>
   </div>
 
   <div class="wrap" style="padding-bottom:80px;">
     <div class="menu-grid" id="menuGrid"></div>
-    <div class="facts-mini">
-      <div class="fact"><span class="num">0</span><p>ความลับที่ถูกส่งผ่านเครือข่ายระหว่างล็อกอิน</p></div>
-      <div class="fact"><span class="num">1 คู่</span><p>กุญแจต่อบัญชีต่อเว็บไซต์ ใช้ซ้ำข้ามเว็บไม่ได้</p></div>
-      <div class="fact"><span class="num">Sync</span><p>ซิงก์ข้ามอุปกรณ์ผ่าน Cloud Keychain อัตโนมัติ</p></div>
-    </div>
   </div>
 </section>
 
@@ -279,32 +326,29 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
     <div class="section-head reveal">
       <div class="eyebrow">หนึ่งวันเดียวกัน สองความปลอดภัย</div>
       <h2>ถ้าคุณใช้ Password vs ถ้าคุณใช้ Passkey</h2>
-      <p>กิจกรรมเดียวกัน ผลลัพธ์คนละเรื่อง</p>
+      <p>แตะแต่ละช่วงเวลาเพื่อดูรายละเอียด</p>
     </div>
     <div class="persona-heads reveal">
       <div class="persona-head pw"><span class="pic">🔡</span><div><h3>คนใช้ Password</h3><span>พิมพ์รหัสผ่านทุกครั้ง</span></div></div>
       <div class="persona-head pk"><span class="pic">🔑</span><div><h3>คนใช้ Passkey</h3><span>ปลดล็อกด้วยไบโอเมตริกซ์</span></div></div>
     </div>
-    <div class="day-row reveal">
-      <div class="moment"><span class="m-icon">📧</span><div><div class="m-time">07:30 น. — เปิดอีเมล</div><div class="m-text">จำรหัสไม่ได้ ลองผิดหลายครั้ง</div></div></div>
-      <div class="moment"><span class="m-icon">📧</span><div><div class="m-time">07:30 น. — เปิดอีเมล</div><div class="m-text">แตะนิ้วเข้าทันที</div></div></div>
-    </div>
-    <div class="day-row reveal">
-      <div class="moment"><span class="m-icon">🏦</span><div><div class="m-time">09:00 น. — เข้าเว็บธนาคาร</div><div class="m-text">รอ OTP ทาง SMS ก่อนเข้าได้</div></div></div>
-      <div class="moment"><span class="m-icon">🏦</span><div><div class="m-time">09:00 น. — เข้าเว็บธนาคาร</div><div class="m-text">สแกนหน้าเข้าเลย</div></div></div>
-    </div>
-    <div class="day-row reveal">
-      <div class="moment risk pw"><span class="m-icon">📦</span><div><div class="m-time">13:15 น. — กดลิงก์จาก SMS</div><div class="m-text">กรอกรหัสให้เว็บปลอมโดยไม่รู้ตัว</div><span class="badge danger">⚠ ถูกขโมยแล้ว</span></div></div>
-      <div class="moment risk pk"><span class="m-icon">📦</span><div><div class="m-time">13:15 น. — กดลิงก์จาก SMS</div><div class="m-text">โดเมนไม่ตรง ระบบปฏิเสธทันที</div><span class="badge safe">✓ ปลอดภัย</span></div></div>
-    </div>
-    <div class="day-row reveal">
-      <div class="moment"><span class="m-icon">📱</span><div><div class="m-time">19:00 น. — เข้าโซเชียล</div><div class="m-text">ลืมรหัส ต้องกดรีเซ็ตอีกแล้ว</div></div></div>
-      <div class="moment"><span class="m-icon">📱</span><div><div class="m-time">19:00 น. — เข้าโซเชียล</div><div class="m-text">แตะนิ้วเข้าใช้ในวินาทีเดียว</div></div></div>
+    <div class="day-timeline reveal">
+      <div class="group-divider pw-divider">🔡 เส้นทางของคนใช้ Password</div>
+      <div class="moment pw" style="--slot:1;"><span class="m-tag pw">🔡 Password</span><span class="m-icon">📧</span><div><div class="m-time">07:30 น. — เปิดอีเมล</div><div class="m-text">จำรหัสไม่ได้ ลองผิดหลายครั้ง</div><div class="m-detail">ต้องนึกรหัสผ่านที่ตั้งไว้นานแล้ว ลองพิมพ์ผิดถึง 2 ครั้งกว่าจะเข้าอีเมลได้สำเร็จ เสียเวลาก่อนเริ่มงานทุกเช้า</div></div></div>
+      <div class="moment pk" style="--slot:1;"><span class="m-tag pk">🔑 Passkey</span><span class="m-icon">📧</span><div><div class="m-time">07:30 น. — เปิดอีเมล</div><div class="m-text">แตะนิ้วเข้าทันที</div><div class="m-detail">แค่แตะเซ็นเซอร์ลายนิ้วมือครั้งเดียว ระบบยืนยันตัวตนและเปิดอีเมลให้ภายในเสี้ยววินาที ไม่ต้องนึกอะไรเลย</div></div></div>
+
+      <div class="moment pw" style="--slot:2;"><span class="m-tag pw">🔡 Password</span><span class="m-icon">🏦</span><div><div class="m-time">09:00 น. — เข้าเว็บธนาคาร</div><div class="m-text">รอ OTP ทาง SMS ก่อนเข้าได้</div><div class="m-detail">หลังกรอกรหัสผ่านแล้วต้องรอ SMS OTP อีกหลายสิบวินาที บางครั้งสัญญาณช้าทำให้รหัสมาไม่ทัน ต้องขอส่งใหม่</div></div></div>
+      <div class="moment pk" style="--slot:2;"><span class="m-tag pk">🔑 Passkey</span><span class="m-icon">🏦</span><div><div class="m-time">09:00 น. — เข้าเว็บธนาคาร</div><div class="m-text">สแกนหน้าเข้าเลย</div><div class="m-detail">เปิดแอปธนาคาร สแกนใบหน้าเพียงครั้งเดียว เข้าทำธุรกรรมได้ทันทีโดยไม่ต้องรอรหัสใด ๆ</div></div></div>
+
+      <div class="moment risk pw" style="--slot:3;"><span class="m-tag pw">🔡 Password</span><span class="m-icon">📦</span><div><div class="m-time">13:15 น. — กดลิงก์จาก SMS</div><div class="m-text">กรอกรหัสให้เว็บปลอมโดยไม่รู้ตัว</div><div class="m-detail">รีบกดลิงก์จาก SMS แจ้งพัสดุโดยไม่ทันสังเกต URL กรอกบัญชีและรหัสผ่านลงเว็บปลอมทันที ข้อมูลถูกส่งไปยังผู้โจมตีภายในไม่กี่วินาที</div><span class="badge danger">⚠ ถูกขโมยแล้ว</span></div></div>
+      <div class="moment risk pk" style="--slot:3;"><span class="m-tag pk">🔑 Passkey</span><span class="m-icon">📦</span><div><div class="m-time">13:15 น. — กดลิงก์จาก SMS</div><div class="m-text">โดเมนไม่ตรง ระบบปฏิเสธทันที</div><div class="m-detail">แม้กดลิงก์เว็บปลอมเหมือนกัน แต่ระบบตรวจพบว่าโดเมนไม่ตรงกับที่ลงทะเบียน Passkey ไว้ จึงปฏิเสธการยืนยันตัวตนอัตโนมัติ บัญชียังปลอดภัย</div><span class="badge safe">✓ ปลอดภัย</span></div></div>
+
+      <div class="moment pw" style="--slot:4;"><span class="m-tag pw">🔡 Password</span><span class="m-icon">📱</span><div><div class="m-time">19:00 น. — เข้าโซเชียล</div><div class="m-text">ลืมรหัส ต้องกดรีเซ็ตอีกแล้ว</div><div class="m-detail">นึกรหัสผ่านที่ตั้งไว้ซับซ้อนไม่ออก ต้องกด "ลืมรหัสผ่าน" รออีเมลรีเซ็ต เสียเวลาก่อนเข้านอน</div></div></div>
+      <div class="group-divider pk-divider">🔑 เส้นทางของคนใช้ Passkey</div>
+      <div class="moment pk" style="--slot:4;"><span class="m-tag pk">🔑 Passkey</span><span class="m-icon">📱</span><div><div class="m-time">19:00 น. — เข้าโซเชียล</div><div class="m-text">แตะนิ้วเข้าใช้ในวินาทีเดียว</div><div class="m-detail">ไม่มีอะไรต้องจำ แตะลายนิ้วมือเข้าโซเชียลได้ทันที จบวันอย่างไม่มีสะดุด</div></div></div>
     </div>
   </div>
-</section>
-
-<!-- ================= PANEL: EVOLUTION ================= -->
+</section> -->
 <section class="panel" id="panel-evolution">
   <div class="wrap content-panel">
     <div class="section-head reveal">
@@ -334,12 +378,12 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
       <div class="browser-bar">
         <div class="browser-dots"><span></span><span></span><span></span></div>
         <div class="urlbox bad" id="urlbox">
-          <span class="lock">🔓</span><span class="url-good">http://siamtrust-bank</span><span class="url-bad">-secure-login.info</span><span class="url-good">/login</span>
+          <span class="lock">🔓</span><span class="url-good">http://banking-888</span><span class="url-bad">-verify-secure.info</span><span class="url-good">/login</span>
         </div>
       </div>
-      <div class="domain-hint">🔍 <b>จุดสังเกต:</b> เว็บจริงมีโดเมนเดียวคือ <b class="mono">siamtrust-bank.com</b> ส่วนสีแดงคือคำที่ต่อเติมมาหลอก</div>
+      <div class="domain-hint">🔍 <b>จุดสังเกต:</b> เว็บจริงมีโดเมนเดียวคือ <b class="mono">banking-888.com</b> ส่วนสีแดงคือคำที่ต่อเติมมาหลอก</div>
       <div class="browser-body">
-        <div class="fakebank-logo">🏦 SiamTrust Bank</div>
+        <div class="fakebank-logo">🏦 Banking-888</div>
         <div class="fakebank-sub">เข้าสู่ระบบเพื่อจัดการบัญชีของคุณ</div>
         <div id="phishFieldsPw">
           <div class="fake-field">ชื่อผู้ใช้: <span id="typedUser"></span><span class="caret" id="caret1"></span></div>
@@ -347,11 +391,8 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
         </div>
         <div id="phishFieldsPk" style="display:none;color:var(--text-dim);font-size:0.85rem;margin-bottom:14px;">ระบบจะขอให้อุปกรณ์ยืนยันตัวตนด้วย Passkey ที่ผูกกับเว็บไซต์จริงเท่านั้น</div>
         <div class="sim-controls">
-          <button class="btn btn-ghost" id="simBackBtn" disabled>◀ ย้อนกลับ</button>
           <button class="btn btn-gold" id="simBtn">▶ เริ่มจำลอง</button>
-          <button class="btn btn-ghost" id="simResetBtn">🔄 เริ่มใหม่</button>
         </div>
-        <div class="sim-step-label mono" id="simStepLabel">ขั้นตอนที่ 0</div>
         <div class="sim-result" id="simResult"></div>
       </div>
     </div>
@@ -417,7 +458,7 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
     <div class="section-head reveal">
       <div class="eyebrow">เทียบให้เห็นภาพ</div>
       <h2>วิธีเก่า vs Passkey</h2>
-      <p>ตัวเลขเทียบชัด ๆ ระหว่างวิธีเก่ากับ Passkey</p>
+      <p>เทียบชัด ๆ เป็นตัวเลข</p>
     </div>
     <div class="compare-grid reveal" id="compareGrid"></div>
   </div>
@@ -429,7 +470,7 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
     <div class="section-head reveal">
       <div class="eyebrow">เริ่มใช้งานจริง</div>
       <h2>เปิดใช้ Passkey บนแพลตฟอร์มยอดนิยม</h2>
-      <p>ขั้นตอนเปิดใช้งานจริงบนแพลตฟอร์มยอดนิยม</p>
+      <p>ทำตามได้ใน 4 ขั้นตอน</p>
     </div>
     <div class="plattabs reveal">
       <button class="tab active" data-plat="google">Google</button>
@@ -445,10 +486,19 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
   <div class="wrap content-panel">
     <div class="section-head reveal">
       <div class="eyebrow">เช็คความเข้าใจ</div>
-      <h2>ทดสอบสั้น ๆ 4 ข้อ</h2>
-      <p>เช็คว่าคุณเข้าใจ Passkey แค่ไหน</p>
+      <h2>ทดสอบความเข้าใจ</h2>
+      <p>สแกน QR Code เพื่อทำแบบทดสอบ</p>
     </div>
-    <div class="quiz-box reveal" id="quizBox"></div>
+    <div class="qr-box reveal">
+      <!--
+        วิธีใส่ QR Code จริง: แทนที่บรรทัด <div class="qr-placeholder">...</div> ด้านล่าง
+        ด้วย <img src="qr-code.png" alt="QR Code แบบทดสอบ" class="qr-img"> โดยวางไฟล์ qr-code.png ไว้โฟลเดอร์เดียวกับ index.html
+        หรือใส่ลิงก์ Google Form ตรง ๆ ที่ปุ่มด้านล่าง
+      -->
+      <div class="qr-placeholder">📱<span>ที่ว่างสำหรับ QR Code</span></div>
+      <p class="qr-note">แบบทดสอบความเข้าใจผ่าน Google Form<br>จะเพิ่ม QR Code ที่นี่ภายหลัง</p>
+      <a class="btn btn-ghost" href="#" id="quizFormLink">🔗 เปิดแบบทดสอบ (ใส่ลิงก์ภายหลัง)</a>
+    </div>
   </div>
 </section>
 
@@ -458,7 +508,12 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
   อ้างอิง: fidoalliance.org/passkeys · safety.google/authentication/passkeys
 </footer>
 
-<nav class="navdock mono" id="navdock"></nav>
+<button class="hamburger-btn" id="hamburgerBtn" aria-label="เปิด/ปิดเมนู"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<nav class="sidebar mono" id="sidebar">
+  <div class="sidebar-head">เมนู</div>
+  <div id="sidebarList"></div>
+</nav>
 
 <script>
 /* ================= DATA ================= */
@@ -540,22 +595,32 @@ const menuItems = [
 ];
 const navItems = [{key:'main',icon:'🏠',label:'หน้าแรก'}, ...menuItems];
 
-/* ================= SPA TAB SWITCHER ================= */
+/* ================= SPA TAB SWITCHER + SIDEBAR ================= */
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+function openSidebar(){ sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); hamburgerBtn.classList.add('open'); }
+function closeSidebar(){ sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); hamburgerBtn.classList.remove('open'); }
+hamburgerBtn.addEventListener('click', ()=>{ sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); });
+sidebarOverlay.addEventListener('click', closeSidebar);
+
 function switchTab(key){
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+key));
-  document.querySelectorAll('#navdock button').forEach(b=>b.classList.toggle('active', b.dataset.key===key));
+  document.querySelectorAll('#sidebarList button').forEach(b=>b.classList.toggle('active', b.dataset.key===key));
   window.scrollTo(0,0);
+  closeSidebar();
   document.querySelectorAll('.reveal').forEach(el=>{ if(el.closest('#panel-'+key)) io.observe(el); });
 }
 
-const navdock = document.getElementById('navdock');
+const sidebarList = document.getElementById('sidebarList');
 navItems.forEach((n,i)=>{
   const b = document.createElement('button');
   b.dataset.key = n.key;
-  b.textContent = n.icon+' '+n.label;
+  b.innerHTML = `<span class="si">${n.icon}</span><span>${n.label}</span>`;
   if(i===0) b.classList.add('active');
   b.addEventListener('click', ()=>switchTab(n.key));
-  navdock.appendChild(b);
+  sidebarList.appendChild(b);
 });
 
 const menuGrid = document.getElementById('menuGrid');
@@ -591,6 +656,11 @@ setInterval(()=>{
     threatWordEl.style.opacity = 1;
   },250);
 },2400);
+
+/* ================= DAY MOMENTS (tap to reveal) ================= */
+document.querySelectorAll('.moment').forEach(m=>{
+  m.addEventListener('click', ()=>m.classList.toggle('open'));
+});
 
 /* ================= DETAIL TOGGLES (how it works) ================= */
 document.querySelectorAll('.detail-toggle').forEach(btn=>{
@@ -652,86 +722,76 @@ compareData.forEach(c=>{
   compareGrid.appendChild(card);
 });
 
-/* ================= PHISHING SIMULATOR (step engine) ================= */
+/* ================= PHISHING SIMULATOR (auto-play) ================= */
 const tabs = document.querySelectorAll('#panel-phish .tab');
 const phishFieldsPw = document.getElementById('phishFieldsPw');
 const phishFieldsPk = document.getElementById('phishFieldsPk');
 const simBtn = document.getElementById('simBtn');
-const simBackBtn = document.getElementById('simBackBtn');
-const simResetBtn = document.getElementById('simResetBtn');
-const simStepLabel = document.getElementById('simStepLabel');
 const simResult = document.getElementById('simResult');
 const typedUser = document.getElementById('typedUser');
 const typedPass = document.getElementById('typedPass');
 const caret1 = document.getElementById('caret1');
 const caret2 = document.getElementById('caret2');
 let phishMode = 'pw';
-let phishStep = 0;
-const PW_MAX_STEP = 3, PK_MAX_STEP = 2;
+let simDone = false;
 const PW_ATTACKER_LOG = `<div class="attacker-log mono">$ attacker@server:~ captured credentials<br>&gt; user: somchai_user<br>&gt; pass: ******** (ใช้งานได้จริงกับเว็บธนาคารจริงด้วย หากใช้รหัสซ้ำ)</div>`;
 
 tabs.forEach(t=>t.addEventListener('click',()=>{
   tabs.forEach(x=>x.classList.remove('active'));
   t.classList.add('active');
-  phishMode = t.dataset.tab; phishStep = 0; renderPhish();
+  phishMode = t.dataset.tab; resetPhish();
 }));
-simBtn.addEventListener('click', ()=>{
-  const max = phishMode==='pw' ? PW_MAX_STEP : PK_MAX_STEP;
-  if(phishStep < max){ phishStep++; renderPhish(); }
-});
-simBackBtn.addEventListener('click', ()=>{ if(phishStep > 0){ phishStep--; renderPhish(); } });
-simResetBtn.addEventListener('click', ()=>{ phishStep = 0; renderPhish(); });
 
-function renderPhish(){
-  if(phishMode==='pw'){ phishFieldsPw.style.display='block'; phishFieldsPk.style.display='none'; renderPwStep(); }
-  else{ phishFieldsPw.style.display='none'; phishFieldsPk.style.display='block'; renderPkStep(); }
-  simBackBtn.disabled = (phishStep===0);
+function resetPhish(){
+  simDone = false;
+  simResult.className='sim-result'; simResult.innerHTML=''; simResult.removeAttribute('style');
+  typedUser.textContent=''; typedPass.textContent='';
+  caret1.style.display='inline-block'; caret2.style.display='none';
+  simBtn.disabled=false; simBtn.textContent='▶ เริ่มจำลอง';
+  if(phishMode==='pw'){ phishFieldsPw.style.display='block'; phishFieldsPk.style.display='none'; }
+  else{ phishFieldsPw.style.display='none'; phishFieldsPk.style.display='block'; }
 }
-function renderPwStep(){
-  simResult.className='sim-result'; simResult.innerHTML='';
-  caret1.style.display='none'; caret2.style.display='none';
-  if(phishStep===0){
-    typedUser.textContent=''; typedPass.textContent=''; caret1.style.display='inline-block';
-    simStepLabel.textContent = 'ขั้นตอนที่ 0 / 3 — ยังไม่เริ่มกรอกข้อมูล';
-    simBtn.textContent = '▶ เริ่มจำลอง: กรอกชื่อผู้ใช้'; simBtn.disabled = false;
-  }else if(phishStep===1){
-    typedUser.textContent='somchai_user'; typedPass.textContent=''; caret2.style.display='inline-block';
-    simStepLabel.textContent = 'ขั้นตอนที่ 1 / 3 — กรอกชื่อผู้ใช้แล้ว';
-    simBtn.textContent = '▶ พิมพ์รหัสผ่านต่อ'; simBtn.disabled = false;
-  }else if(phishStep===2){
-    typedUser.textContent='somchai_user'; typedPass.textContent='••••••••';
-    simStepLabel.textContent = 'ขั้นตอนที่ 2 / 3 — กรอกรหัสผ่านครบแล้ว';
-    simBtn.textContent = '▶ กดเข้าสู่ระบบ'; simBtn.disabled = false;
-  }else if(phishStep===3){
-    typedUser.textContent='somchai_user'; typedPass.textContent='••••••••';
-    simStepLabel.textContent = 'ขั้นตอนที่ 3 / 3 — ผลลัพธ์';
-    simBtn.textContent = 'จบขั้นตอนแล้ว'; simBtn.disabled = true;
-    simResult.className='sim-result bad show';
-    simResult.innerHTML = `<div class="rtitle">⚠️ ข้อมูลของคุณถูกส่งไปยังผู้โจมตีแล้ว</div>
-      รหัสผ่านเป็นเพียง "ข้อความ" จึงถูกดักจับและนำไปใช้ซ้ำได้ทันที กด ◀ ย้อนกลับ เพื่อไล่ดูอีกครั้ง
-      ${PW_ATTACKER_LOG}`;
-  }
+resetPhish();
+
+function typeInto(el, text, done){
+  let i=0;
+  const iv = setInterval(()=>{
+    el.textContent += text[i]; i++;
+    if(i>=text.length){ clearInterval(iv); if(done) done(); }
+  }, 65);
 }
-function renderPkStep(){
-  simResult.className='sim-result'; simResult.innerHTML='';
-  if(phishStep===0){
-    simStepLabel.textContent = 'ขั้นตอนที่ 0 / 2 — ยังไม่เริ่ม';
-    simBtn.textContent = '▶ เข้าสู่ระบบด้วย Passkey'; simBtn.disabled = false;
-  }else if(phishStep===1){
-    simStepLabel.textContent = 'ขั้นตอนที่ 1 / 2 — กำลังตรวจสอบโดเมน';
-    simBtn.textContent = '▶ ดูผลการตรวจสอบ'; simBtn.disabled = false;
+
+simBtn.addEventListener('click', ()=>{
+  if(simDone){ resetPhish(); simDone = false; return; }
+  simBtn.disabled = true;
+  if(phishMode==='pw'){
+    simBtn.textContent = 'กำลังจำลอง…';
+    typeInto(typedUser, 'somchai_user', ()=>{
+      caret1.style.display='none'; caret2.style.display='inline-block';
+      typeInto(typedPass, '••••••••', ()=>{
+        caret2.style.display='none';
+        setTimeout(()=>{
+          simResult.className='sim-result bad show';
+          simResult.innerHTML = `<div class="rtitle">⚠️ ข้อมูลของคุณถูกส่งไปยังผู้โจมตีแล้ว</div>
+            รหัสผ่านเป็นเพียง "ข้อความ" จึงถูกดักจับและนำไปใช้ซ้ำได้ทันที
+            ${PW_ATTACKER_LOG}`;
+          simBtn.textContent = '🔄 ลองอีกครั้ง'; simBtn.disabled = false; simDone = true;
+        },400);
+      });
+    });
+  }else{
+    simBtn.textContent = 'กำลังตรวจสอบ…';
     simResult.className='sim-result show';
     simResult.style.background='rgba(203,161,53,.1)'; simResult.style.border='1px solid rgba(203,161,53,.3)'; simResult.style.color='var(--text-dim)';
-    simResult.innerHTML = `<div class="rtitle">🔍 กำลังเทียบโดเมนกับที่ลงทะเบียน Passkey ไว้…</div>`;
-  }else if(phishStep===2){
-    simStepLabel.textContent = 'ขั้นตอนที่ 2 / 2 — ผลลัพธ์';
-    simBtn.textContent = 'จบขั้นตอนแล้ว'; simBtn.disabled = true;
-    simResult.className='sim-result good show'; simResult.removeAttribute('style');
-    simResult.innerHTML = `<div class="rtitle">✅ Passkey ปฏิเสธการยืนยันตัวตนอัตโนมัติ</div>
-      โดเมนนี้ไม่ตรงกับที่ลงทะเบียนไว้ จึงไม่มีการเซ็นรับรองเกิดขึ้น บัญชีปลอดภัย 100% กด ◀ ย้อนกลับ เพื่อไล่ดูอีกครั้ง`;
+    simResult.innerHTML = `<div class="rtitle">🔍 กำลังดำเนินการตรวจสอบโดเมน…</div>ระบบกำลังเทียบโดเมนของเว็บไซต์นี้กับโดเมนที่ลงทะเบียน Passkey ไว้ กรุณารอสักครู่`;
+    setTimeout(()=>{
+      simResult.className='sim-result good show'; simResult.removeAttribute('style');
+      simResult.innerHTML = `<div class="rtitle">✅ Passkey ปฏิเสธการยืนยันตัวตนอัตโนมัติ</div>
+        โดเมนนี้ไม่ตรงกับที่ลงทะเบียนไว้ จึงไม่มีการเซ็นรับรองเกิดขึ้น บัญชีปลอดภัย 100%`;
+      simBtn.textContent = '🔄 ลองอีกครั้ง'; simBtn.disabled = false; simDone = true;
+    },1500);
   }
-}
-renderPhish();
+});
 
 /* ================= WEBAUTHN DEMO (SIMULATED ONLY) ================= */
 const demoIcon = document.getElementById('demoIcon');
@@ -783,39 +843,6 @@ function renderPlat(key){
 }
 platTabs.forEach(t=>t.addEventListener('click',()=>{ platTabs.forEach(x=>x.classList.remove('active')); t.classList.add('active'); renderPlat(t.dataset.plat); }));
 renderPlat('google');
-
-/* ================= QUIZ ================= */
-const quizBox = document.getElementById('quizBox');
-let qIndex = 0, qScore = 0, qAnswered = false;
-function renderQuiz(){
-  if(qIndex >= quizData.length){
-    quizBox.innerHTML = `<div class="quiz-result">
-      <div class="quiz-progress">ผลลัพธ์</div><div class="score">${qScore}/${quizData.length}</div>
-      <p style="color:var(--text-dim);margin:10px 0 20px;">${qScore===quizData.length?'เยี่ยมมาก! เข้าใจครบทุกประเด็นสำคัญ':'ลองย้อนกลับไปดูส่วน "กลไกการทำงาน" อีกครั้ง'}</p>
-      <button class="btn btn-gold" id="quizRetry">ทำแบบทดสอบอีกครั้ง</button></div>`;
-    document.getElementById('quizRetry').addEventListener('click', ()=>{ qIndex=0; qScore=0; renderQuiz(); });
-    return;
-  }
-  const q = quizData[qIndex]; qAnswered = false;
-  quizBox.innerHTML = `<div class="quiz-progress">คำถาม ${qIndex+1} / ${quizData.length}</div>
-    <div class="quiz-q">${q.q}</div>
-    ${q.opts.map((o,i)=>`<button class="quiz-opt" data-i="${i}">${o}</button>`).join('')}
-    <div class="quiz-exp" id="quizExp"></div>
-    <button class="btn btn-gold" id="quizNext" style="display:none;margin-top:14px;">${qIndex===quizData.length-1?'ดูผลลัพธ์':'ข้อถัดไป'}</button>`;
-  quizBox.querySelectorAll('.quiz-opt').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      if(qAnswered) return; qAnswered = true;
-      const i = +btn.dataset.i;
-      quizBox.querySelectorAll('.quiz-opt').forEach((b,bi)=>{ if(bi===q.correct) b.classList.add('correct'); else if(bi===i) b.classList.add('wrong'); });
-      if(i===q.correct) qScore++;
-      document.getElementById('quizExp').textContent = q.exp;
-      document.getElementById('quizExp').classList.add('show');
-      document.getElementById('quizNext').style.display = 'inline-flex';
-    });
-  });
-  document.getElementById('quizNext').addEventListener('click', ()=>{ qIndex++; renderQuiz(); });
-}
-renderQuiz();
 
 /* ================= SCROLL REVEAL ================= */
 const io = new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
