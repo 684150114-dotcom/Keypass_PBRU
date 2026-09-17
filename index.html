@@ -24,7 +24,7 @@ button{font-family:inherit;}
 @media(max-width:640px){.wrap{padding:0 23px;}}
 
 /* ---- font size control (now inside sidebar) ---- */
-.sidebar-fs{margin-top:auto;padding:16px 12px 6px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.sidebar-fs{margin-top:auto;padding:20px 16px 12px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;}
 .sidebar-fs-label{font-size:0.72rem;color:var(--text-dimmer);letter-spacing:.05em;}
 .fs-controls{display:flex;gap:4px;background:var(--bg-panel-2);border:1px solid var(--line);border-radius:100px;padding:4px;}
 .fs-btn{width:30px;height:30px;border-radius:50%;border:1px solid transparent;background:none;color:var(--text-dim);cursor:pointer;font-family:'Kanit',sans-serif;font-weight:600;font-size:0.76rem;display:flex;align-items:center;justify-content:center;}
@@ -416,7 +416,7 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
         <button class="btn btn-gold" id="registerBtn">ลงทะเบียน Passkey</button>
         <button class="btn btn-ghost" id="loginBtn" disabled>เข้าสู่ระบบด้วย Passkey</button>
       </div>
-      <div class="demo-log mono" id="demoLog">$ รอการลงทะเบียน…</div>
+      <div class="demo-log mono" id="demoLog"> รอการลงทะเบียน…</div>
     </div>
   </div>
 </section>
@@ -523,23 +523,23 @@ footer{padding:40px 0 130px;text-align:center;color:var(--text-dimmer);font-size
 <script>
 /* ================= DATA ================= */
 const stages = [
-  {icon:'🔡',title:'รหัสผ่าน',era:'ราว 1960s — ปัจจุบัน',tag:'จุดเริ่มต้น',
+  {icon:'🔡',title:'รหัสผ่าน',era:'ราวปี 1960 — ปัจจุบัน',tag:'จุดเริ่มต้น',
    desc:'ยุคแรกของการยืนยันตัวตนดิจิทัล ผู้ใช้ตั้งชุดตัวอักษรที่ (ควร) มีแต่ตัวเองรู้ ง่ายต่อการสร้างระบบ แต่ภาระทั้งหมดตกอยู่ที่ความจำและวินัยของมนุษย์ ทำให้คนส่วนใหญ่ตั้งรหัสง่ายและใช้ซ้ำหลายเว็บ',
    security:20,convenience:55,
    flags:[{t:'ใช้ซ้ำง่าย เสี่ยงหลุดยกแผง',good:false},{t:'ถูก Phishing ได้ตรง ๆ',good:false},{t:'ตั้งค่าง่าย ทุกระบบรองรับ',good:true}]},
-  {icon:'📟',title:'รหัสผ่าน + OTP ทาง SMS',era:'ต้น–กลาง 2000s',tag:'ยุค 2FA รุ่นแรก',
+  {icon:'📟',title:'รหัสผ่าน + OTP ทาง SMS',era:'ต้น–กลางปี 2000',tag:'ยุค 2FA รุ่นแรก',
    desc:'เพิ่ม "ปัจจัยที่สอง" คือรหัสใช้ครั้งเดียวที่ส่งผ่าน SMS ทำให้ผู้โจมตีที่มีแค่รหัสผ่านเข้าระบบไม่ได้ แต่ยังพึ่งเครือข่ายมือถือซึ่งถูกโจมตีแบบ SIM swap ได้',
    security:45,convenience:45,
    flags:[{t:'เสี่ยงถูก SIM Swap',good:false},{t:'OTP ถูกดักได้ผ่านเว็บปลอม',good:false},{t:'ดีกว่ารหัสผ่านเดี่ยว',good:true}]},
-  {icon:'📲',title:'แอป Authenticator (TOTP)',era:'กลาง 2010s',tag:'ปัจจัยที่สองแบบออฟไลน์',
+  {icon:'📲',title:'แอป Authenticator (TOTP)',era:'กลางปี 2010',tag:'ปัจจัยที่สองแบบออฟไลน์',
    desc:'ย้ายรหัสใช้ครั้งเดียวมาไว้ในแอปที่คำนวณเองแบบออฟไลน์ ตัดปัญหา SIM swap ได้มาก แต่ยังต้องพิมพ์รหัสผ่านหลักอยู่ดี และยังหลอกกรอกโค้ดบนเว็บปลอมได้ในบางกรณี',
    security:60,convenience:50,
    flags:[{t:'ยังต้องพิมพ์รหัสผ่านหลัก',good:false},{t:'หลอกกรอกโค้ดบนเว็บปลอมได้',good:false},{t:'ไม่พึ่งเครือข่ายมือถือ',good:true}]},
-  {icon:'🫆',title:'ไบโอเมตริกซ์บนอุปกรณ์',era:'ราว 2013 — ปัจจุบัน',tag:'ปลดล็อกด้วยร่างกาย',
+  {icon:'🫆',title:'ไบโอเมตริกซ์บนอุปกรณ์',era:'ราวปี 2013 — ปัจจุบัน',tag:'ปลดล็อกด้วยร่างกาย',
    desc:'ลายนิ้วมือและใบหน้าเริ่มถูกใช้ปลดล็อกแอปและอุปกรณ์ สะดวกและเร็วขึ้นมาก แต่ส่วนใหญ่ยังเป็นเพียงกุญแจปลดล็อกเฉพาะเครื่อง ไม่ใช่มาตรฐานเดียวกันที่ใช้ยืนยันตัวตนกับเว็บไซต์ภายนอกได้โดยตรง',
    security:65,convenience:80,
    flags:[{t:'ยังมีรหัสผ่านเป็นทางสำรอง',good:false},{t:'มาตรฐานต่างกันในแต่ละแพลตฟอร์ม',good:false},{t:'ใช้งานเร็วมาก',good:true}]},
-  {icon:'🔑',title:'Passkey (FIDO2 / WebAuthn)',era:'2022 — ปัจจุบัน',tag:'มาตรฐานปลอดภัยล่าสุด',
+  {icon:'🔑',title:'Passkey (FIDO2 / WebAuthn)',era:'ปี 2022 — ปัจจุบัน',tag:'มาตรฐานปลอดภัยล่าสุด',
    desc:'รวมจุดแข็งของทุกยุคเข้าด้วยกัน ใช้กุญแจคู่แบบเข้ารหัสที่ผูกกับแต่ละเว็บไซต์โดยเฉพาะ ปลดล็อกด้วยไบโอเมตริกซ์หรือ PIN ไม่มีความลับใดถูกส่งผ่านเครือข่าย จึงป้องกัน phishing ได้โดยธรรมชาติ และซิงก์ข้ามอุปกรณ์ได้ผ่าน Apple / Google / Microsoft',
    security:95,convenience:90,
    flags:[{t:'ป้องกัน Phishing โดยดีไซน์',good:true},{t:'ไม่มีรหัสผ่านให้รั่วไหล',good:true},{t:'ซิงก์ข้ามอุปกรณ์ได้',good:true}]},
